@@ -37,3 +37,38 @@ export async function createThread({
     throw new Error(`Error crating thread: ${error.message}`);
   }
 }
+
+export async function fetchPosts(pageNumber = 1, pageSize = 20) {
+  connectToDB();
+
+  // Posts to skip
+
+  const skipAmount = (pageNumber - 1) * pageSize;
+
+  //Fetch top lvl Thread
+  const postsQuery = Thread.find({
+    parentId: { $in: [null, undefined] },
+  })
+    .sort({ createdAt: "desc" })
+    .skip(skipAmount)
+    .limit(pageSize)
+    .populate({ path: "author", model: "User" })
+    .populate({
+      path: "children",
+      populate: {
+        path: "author",
+        model: User,
+        select: "_id name parentId image",
+      },
+    });
+
+  const totalPostCount = await Thread.countDocuments({
+    $in: [null, undefined],
+  });
+
+  const posts = await postsQuery.exec();
+
+  const isNext = totalPostCount > skipAmount + posts.length;
+
+  return { posts, isNext };
+}
