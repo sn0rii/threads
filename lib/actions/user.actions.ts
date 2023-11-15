@@ -77,5 +77,9 @@ export async function fetchUserPosts(userId: string) {
         },
       },
     });
-  } catch (error: any) {}
+
+    return threads;
+  } catch (error: any) {
+    throw new Error(`Failed to fetch user posts: ${error.message}`);
+  }
 }
