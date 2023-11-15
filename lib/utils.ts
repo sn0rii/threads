@@ -13,14 +13,22 @@ export function isBase64Image(imageData: string) {
 }
 
 // created by chatgpt
+// corrected by me
+
 export function formatDateString(dateString: string) {
+  const date = new Date();
+
+  // Check if date is invalid
+  if (isNaN(date.getTime())) {
+    return "Invalid Date";
+  }
+
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "short",
     day: "numeric",
   };
 
-  const date = new Date(dateString);
   const formattedDate = date.toLocaleDateString(undefined, options);
 
   const time = date.toLocaleTimeString([], {
@@ -30,6 +38,24 @@ export function formatDateString(dateString: string) {
 
   return `${time} - ${formattedDate}`;
 }
+
+// export function formatDateString(dateString: string) {
+//   const options: Intl.DateTimeFormatOptions = {
+//     year: "numeric",
+//     month: "short",
+//     day: "numeric",
+//   };
+
+//   const date = new Date(dateString);
+//   const formattedDate = date.toLocaleDateString(undefined, options);
+
+//   const time = date.toLocaleTimeString([], {
+//     hour: "numeric",
+//     minute: "2-digit",
+//   });
+
+//   return `${time} - ${formattedDate}`;
+// }
 
 // created by chatgpt
 export function formatThreadCount(count: number): string {
